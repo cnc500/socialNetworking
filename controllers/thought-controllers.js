@@ -3,13 +3,13 @@ const { Thoughts, User } = require('../models');
 module.exports = {
   // Get all thoughts
   getThoughts(req, res) {
-    Thoughts.find()
+    Thoughts.find({})
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
   // Get a thought
   getSingleThought(req, res) {
-    Thoughts.findOne({ _id: req.params.thoughtId })
+    Thoughts.findOne({ _id: req.params.id})
       .select('-__v')
       .then((thoughts) =>
         !thoughts
@@ -28,8 +28,8 @@ module.exports = {
       });
   },
   // Delete a thought
-  deletethought(req, res) {
-    Thoughts.findOneAndDelete({ _id: req.params.thoughtId })
+  deleteThought(req, res) {
+    Thoughts.findOneAndDelete({ _id: req.params.id })
       .then((thoughts) => {
         if (!thoughts){
           res.status(404).json({ message: 'No thought with that ID' })
@@ -39,16 +39,16 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   // Update a thought
-  updatethought(req, res) {
-    thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
+  updateThought(req, res) {
+    Thoughts.findOneAndUpdate(
+      { _id: req.params.id },
       { $set: req.body },
       { runValidators: true, new: true }
     )
-      .then((thought) =>
-        !thought
+      .then((thoughts) =>
+        !thoughts
           ? res.status(404).json({ message: 'No thought with this id!' })
-          : res.json(thought)
+          : res.json(thoughts)
       )
       .catch((err) => res.status(500).json(err));
   },
